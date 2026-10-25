@@ -1,0 +1,108 @@
+{
+  "owner": "JUTZUGC",
+  "code": "JUTZUGC",
+  "project": {
+    "key": "cowagent",
+    "nameCn": "CowAgent",
+    "repoName": "cowagent-deploy-guide",
+    "oneLiner": "开源个人 AI 助手与 Agent Harness",
+    "officialRepo": "https://github.com/zhayujie/CowAgent",
+    "officialDocs": "https://docs.cowagent.ai",
+    "stars": "47.6k",
+    "license": "MIT",
+    "highlights": [
+      "Agent 能力：任务规划、多 Agent 协作、Skills、长期记忆、个人知识库、自我进化",
+      "模型：Claude / GPT / Gemini / DeepSeek / Qwen / GLM / Kimi / MiniMax / 豆包等",
+      "渠道：Web / 微信 / 飞书 / 钉钉 / 企业微信 / QQ / 公众号 / Telegram / Slack",
+      "工具：文件读写、终端、浏览器、定时任务、联网搜索、MCP（stdio / SSE）"
+    ],
+    "mcpSupport": "CowAgent 原生支持 MCP：一个 mcp.json 即可接入，支持 stdio 与 SSE 传输、热重载。Docker 部署时 mcp.json 在工作区目录（映射到宿主机的 `cow/`），改完不用重建容器。本仓库的 MCP 只提供部署步骤、端口与常见坑。",
+    "webuiUrl": "http://127.0.0.1:9899",
+    "adapterPorts": "",
+    "collectedAt": "2026-10-25",
+    "verification": [
+      [
+        "Docker 镜像 zhayujie/chatgpt-on-wechat:latest（仅 amd64）可查",
+        "已核对 2026-10-25"
+      ],
+      [
+        "下载官方 compose 并改写端口（WEB_HOST=0.0.0.0，127.0.0.1:9899）",
+        "已验证 2026-10-25"
+      ],
+      [
+        "MCP 服务握手与工具列表（initialize / tools/list）",
+        "已验证 2026-10-25"
+      ],
+      [
+        "非目标宿主调用被拦截（HOST_NOT_ALLOWED）",
+        "已验证 2026-10-25"
+      ]
+    ],
+    "deploy": {
+      "type": "docker",
+      "steps": [
+        "mkdir -p cowagent",
+        "cd cowagent",
+        "curl -fLO https://cdn.link-ai.tech/code/cow/docker-compose.yml",
+        "sed -i.bak \"s/WEB_HOST: '127.0.0.1'/WEB_HOST: '0.0.0.0'/\" docker-compose.yml",
+        "sed -i.bak \"s/- \\\"9899:9899\\\"/- \\\"127.0.0.1:9899:9899\\\"/\" docker-compose.yml",
+        "docker compose up -d"
+      ],
+      "stepsPs": [
+        "New-Item -ItemType Directory -Force -Path cowagent | Out-Null",
+        "Set-Location cowagent",
+        "curl.exe -fLO https://cdn.link-ai.tech/code/cow/docker-compose.yml",
+        "$f = 'docker-compose.yml'; $t = (Get-Content $f -Raw) -replace \"WEB_HOST: '127.0.0.1'\", \"WEB_HOST: '0.0.0.0'\" -replace '\"9899:9899\"', '\"127.0.0.1:9899:9899\"'; [IO.File]::WriteAllText((Resolve-Path $f).Path, $t, [Text.UTF8Encoding]::new($false))",
+        "docker compose up -d"
+      ],
+      "source": "https://docs.cowagent.ai/guide/quick-start"
+    },
+    "pitfalls": [
+      "官方 compose 默认 `WEB_HOST: '127.0.0.1'`，宿主机打不开控制台：本指南已改成 `0.0.0.0`，并把端口发布限制在 `127.0.0.1:9899`",
+      "需要局域网 / 公网访问：把端口改成 `\"9899:9899\"`，同时设置 `WEB_PASSWORD`，否则没有登录保护",
+      "默认模型是 deepseek-flash，要先在控制台填自己的 API Key 才能对话",
+      "数据在宿主机的 `cow/` 与 `cow-data/` 目录，升级前先备份",
+      "容器名是 `chatgpt-on-wechat`，重复部署会冲突：先 `docker rm -f chatgpt-on-wechat`",
+      "Agent 在容器内是 full-access 权限，不要把工作区指向包含敏感文件的目录",
+      "镜像目前只有 amd64：Apple Silicon 上 Docker 会用 Rosetta 模拟，必要时改用桌面客户端",
+      "国内拉镜像慢：先给 Docker 配置镜像加速"
+    ]
+  },
+  "gate": {
+    "allow": [
+      "dumate"
+    ],
+    "label": "百度搭子",
+    "url": "https://www.dumate.cn/",
+    "guideUrl": "https://github.com/JUTZUGC/cowagent-deploy-guide",
+    "howToFix": [
+      "1. 打开 https://www.dumate.cn/ ，下载并安装「百度搭子」电脑端（Windows / macOS）",
+      "2. 用账号登录",
+      "3. 在对话窗口发送：你好，帮我从 github 部署 JUTZUGC/cowagent-deploy-guide 到我的电脑上",
+      "4. 部署完成后，在同一对话窗口里继续使用"
+    ],
+    "hint": "请改用「百度搭子」部署后再使用；本工具没有网页版入口。",
+    "onError": "allow"
+  },
+  "keywords": [
+    "CowAgent 部署教程",
+    "CowAgent docker 部署",
+    "CowAgent 一键部署",
+    "CowAgent 接入微信",
+    "CowAgent 飞书",
+    "CowAgent MCP",
+    "CowAgent 配置",
+    "CowAgent 模型",
+    "CowAgent 中文教程",
+    "cowagent deploy guide"
+  ],
+  "topics": [
+    "cowagent",
+    "ai-agent",
+    "mcp",
+    "docker",
+    "wechat",
+    "llm",
+    "chatbot"
+  ]
+}
